@@ -1,34 +1,39 @@
 import React, { Component } from "react";
+import Table from "./Table";
+import Form from "./Form";
 
 class App extends Component {
   state = {
-    data: []
+    characters: []
   };
 
-  componentDidMount() {
-    const url =
-      "https://en.wikipedia.org/w/api.php?action=opensearch&search=Seona+Dancing&format=json&origin=*&limit=1";
+  removeCharacter = index => {
+    const { characters } = this.state;
 
-    fetch(url)
-      .then(result => result.json())
-      .then(result => {
-        this.setState({
-          data: result
-        });
-      });
-  }
+    this.setState({
+      characters: characters.filter((character, i) => {
+        return i !== index;
+      })
+    });
+  };
+
+  handleSubmit = character => {
+    this.setState({ characters: [...this.state.characters, character] });
+  };
 
   render() {
-    const { data } = this.state;
-
-    const result = data.map((entry, index) => {
-      console.log(entry);
-      return <li key={index}>{entry}</li>;
-    });
+    const { characters } = this.state;
 
     return (
       <div className="container">
-        <ul>{result}</ul>
+        <h1>React Tutorial</h1>
+        <p>Add a character with a name and a job to the table.</p>
+        <Table
+          characterData={characters}
+          removeCharacter={this.removeCharacter}
+        />
+        <h3>Add New</h3>
+        <Form handleSubmit={this.handleSubmit} />
       </div>
     );
   }
